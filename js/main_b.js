@@ -12,3 +12,33 @@
 // - kun tiedoston lähetys on valmis, kirjoittaa palvelimen vastauksen 'message' elementtiin
 
 // tee tapahtumakuuntelija, joka kutsuu 'upload' funktiota, kun lomake lähetetään
+
+const message = document.querySelector("#message");
+
+document.querySelector("form").addEventListener('submit', (event) => {
+  event.preventDefault();
+  upload();
+});
+
+const upload = (event) =>
+{
+  const input = document.querySelector('input[type="file"]');
+  const data = new FormData();
+  data.append('fileToUpload', input.files[0]);
+
+  console.log("input = " + input.files[0]);
+  console.log("data = " + data);
+
+  const settings = { method: 'POST', body: data};
+
+  fetch('upload.php', settings).then((response) => {
+    if (response.status !== 200) {
+      message.innerHTML = `Eipä toiminu.`;
+    }
+    else {
+      message.innerHTML = `Tiedoston lähetys onnistui!`;
+    }
+  }).catch((error) => {
+    message.innerHTML = `Fetch feilas`;
+  });
+}
